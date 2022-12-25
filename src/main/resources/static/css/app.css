@@ -1,0 +1,33 @@
+.header {
+    height: 70px;
+    overflow: hidden;
+    padding-left: 20px;
+}
+
+.header .title {
+    float: left;
+}
+
+.header .info {
+    float: right;
+    height: 70px;
+    line-height: 70px;
+    margin-right: 20px;
+}
+
+.header .info a:after {
+    content: '|';
+    margin: 0 5px;
+}
+
+.header .info a:last-child:after {
+    content: '';
+    margin: 0;
+}
+
+.footer {
+    height: 30px;
+    overflow: hidden;
+    text-align: center;
+    line-height: 30px;
+}
