@@ -31,3 +31,45 @@
     text-align: center;
     line-height: 30px;
 }
+
+.form .form-line {
+    margin: 10px;
+}
+
+.form .form-line label {
+    width: 80px;
+    display: inline-block;
+    text-align: right;
+    margin-right: 10px;
+}
+
+.form .form-line label:after {
+    content: ":";
+}
+
+.form .form-line input[type=text], .form .form-line input[type=password], .form .form-line select {
+    min-width: 200px;
+}
+
+.form .form-line.required label:before {
+    content: "*";
+    color: red;
+}
+
+a.actions {
+    cursor: pointer;
+}
+
+a.actions:after {
+    content: "|";
+    margin: 0 5px;
+}
+
+a.actions:last-child:after {
+    content: "";
+    margin: 0;
+}
+
+a.actions:hover{
+    color: #ff6600;
+}
