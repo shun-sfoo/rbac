@@ -1,5 +1,7 @@
 package com.matrix.rbac.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -14,6 +16,7 @@ public class Permission {
     private long id;
 
     @ManyToOne
+    @JsonIgnore
     private Permission parent;
 
     @Column(nullable = false)
@@ -38,7 +41,28 @@ public class Permission {
     @JoinColumn(name = "parent_id", updatable = false)
     private List<Permission> children;
 
+    @JsonProperty("text")
+    public String getText() {
+        return this.name;
+    }
     public enum Type {
+        MENU("菜单"),
+        FUNCTION("功能"),
+        BLOCK("区域");
 
+        private String display;
+
+        Type(String display) {
+            this.display = display;
+        }
+
+        public String display() {
+            return display;
+        }
+
+        @Override
+        public String toString() {
+            return this.display + "[" + this.name() + "]";
+        }
     }
 }
