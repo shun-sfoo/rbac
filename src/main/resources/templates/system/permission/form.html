@@ -7,8 +7,7 @@
     <div class="form-line">
         <label for="parent">父资源</label>
         <select id="parent" name="parent" class="easyui-combotree"
-                th:value="${permission?.parent?.id}"
-                data-options="editable:false,url:'/system/permission/combo'"></select>
+                th:data-options="|editable:false,url:'/system/permission/combo',value:${permission?.parent?.id}|"></select>
     </div>
 
     <div class="form-line required">
@@ -25,8 +24,8 @@
 
     <div class="form-line">
         <label for="type">资源类型</label>
-        <select id="type" name="type" class="easyui-combobox" th:value="${permission?.type}"
-                data-options="editable:false,panelHeight:'auto'">
+        <select id="type" name="type" class="easyui-combobox"
+                th:data-options="|editable:false,panelHeight:'auto',value:'${permission?.type == null?'MENU': permission?.type?.name()}'|">
             <option value="MENU">菜单</option>
             <option value="FUNCTION">功能</option>
             <option value="BLOCK">区域</option>
@@ -57,8 +56,8 @@
 
     <div class="form-line">
         <label for="enable">状态</label>
-        <input id="enable" name="enable" class="easyui-switchbutton" th:checked="${permission?.enable == null ?'true':'false'}"
-               data-options="onText:'启用',offText:'禁用',value:'1'">
+        <input id="enable" name="enable" class="easyui-switchbutton"
+               th:data-options="|onText:'启用',offText:'禁用',value:1,checked:${permission?.enable == null || permission?.enable?'true':'false'}|">
     </div>
 
 </form>

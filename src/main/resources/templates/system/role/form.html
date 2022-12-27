@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+<form id="roleForm" class="form">
+    <input type="hidden" name="id" th:value="${role?.id}">
+
+    <div class="form-line required">
+        <label for="name">角色名称</label>
+        <input id="name" name="roleName" type="text" class="easyui-textbox" th:value="${role?.roleName}"
+               data-options="required:true">
+    </div>
+
+    <div class="form-line required">
+        <label for="roleKey">权限标识</label>
+        <input id="roleKey" name="roleKey" type="text" class="easyui-textbox"
+               th:value="${role?.roleKey}" data-options="required:true">
+    </div>
+
+    <div class="form-line">
+        <label for="description">描述</label>
+        <input id="description" name="description" type="text" th:value="${role?.description}"
+               class="easyui-textbox" data-options="multiline:true">
+    </div>
+
+    <div class="form-line">
+        <label for="enable">状态</label>
+        <input id="enable" name="enable" class="easyui-switchbutton"
+               th:data-options="|onText:'启用',offText:'禁用',value:1,checked:${role?.enable == null || role?.enable?'true':'false'}|">
+    </div>
+
+</form>
+</body>
+</html>
