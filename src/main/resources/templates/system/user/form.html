@@ -34,6 +34,13 @@
     </div>
 
     <div class="form-line">
+        <label for="roles">角色</label>
+        <select id="roles" name="roles" type="text" class="easyui-combobox" editable="false" panelHeight="auto" multiple="true">
+            <option th:each="role:${roles}" th:value="${role.id}" th:text="${role.roleName}"></option>
+        </select>
+    </div>
+
+    <div class="form-line">
         <label for="enable">状态</label>
         <input id="enable" name="enable" class="easyui-switchbutton"
                th:data-options="|onText:'启用',offText:'禁用',value:1,checked:${user?.enable == null || user?.enable?'true':'false'}|">

@@ -1,5 +1,6 @@
 package com.matrix.rbac.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -18,6 +19,7 @@ public class User {
     private String account;
 
     @Column(nullable = false, length = 128)
+    @JsonIgnore
     private String password;
 
     @Column(name = "user_name", length = 32)

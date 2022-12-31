@@ -7,4 +7,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserDao extends PagingAndSortingRepository<User, Long> {
     int countByAccount(String account);
+
+    User findFirstByAccount(String account);
 }

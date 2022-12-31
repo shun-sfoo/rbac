@@ -37,6 +37,7 @@ public class Permission {
 
     private Integer weight = 0;
 
+//    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "parent")
     @OneToMany(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "parent_id", updatable = false)
     private List<Permission> children;

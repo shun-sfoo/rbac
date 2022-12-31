@@ -11,9 +11,7 @@ extract easyui in `src/main/resources/static/`
 truncate table with foreign key
 
 ```sql
-SET
-FOREIGN_KEY_CHECKS = 0;
+SET FOREIGN_KEY_CHECKS = 0;
 TRUNCATE table $table_name;
-SET
-FOREIGN_KEY_CHECKS = 1;
+SET FOREIGN_KEY_CHECKS = 1;
 ```

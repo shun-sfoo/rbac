@@ -2,6 +2,7 @@ package com.matrix.rbac.controller.system;
 
 
 import com.matrix.rbac.common.JsonResult;
+import com.matrix.rbac.model.dao.RoleDao;
 import com.matrix.rbac.model.dao.UserDao;
 import com.matrix.rbac.model.entity.User;
 import lombok.extern.slf4j.Slf4j;
@@ -9,6 +10,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -26,6 +28,10 @@ public class UserController {
     @Autowired
     private UserDao userDao;
 
+
+    @Autowired
+    private RoleDao roleDao;
+
     @RequestMapping
     public void index() {
     }
@@ -33,7 +39,7 @@ public class UserController {
     @RequestMapping("/list")
     @ResponseBody
     public Map<String, Object> list(@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int rows) {
-        PageRequest pr = PageRequest.of(page - 1, rows);
+        PageRequest pr = PageRequest.of(page - 1, rows, Sort.Direction.DESC, "id");
         Page<User> pageData = userDao.findAll(pr);
         Map<String, Object> data = new HashMap<>();
         data.put("total", pageData.getTotalElements());
@@ -47,6 +53,8 @@ public class UserController {
             //编辑
             model.addAttribute("user", userDao.findById(id).get());
         }
+
+        model.addAttribute("roles", roleDao.findAllByEnable(true));
         return "system/user/form";
     }
 
