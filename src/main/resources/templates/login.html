@@ -2,8 +2,8 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
-    <title>SpringBoot and easyui RBAC</title>
-    <link rel="stylesheet" href="easyui/themes/bootstrap/easyui.css">
+    <title>广西嘉进医药批发有限公司流向系统</title>
+    <link rel="stylesheet" href="easyui/themes/metro/easyui.css">
     <link rel="stylesheet" href="easyui/themes/icon.css">
     <link rel="stylesheet" href="css/app.css">
     <script src="easyui/jquery.min.js"></script>
@@ -20,11 +20,12 @@
         });
     </script>
 </head>
-<body>
+<body style="background-image: url('/img/bg.jpg')">
 <div class="easyui-dialog"
-     style="height: 250px;width: 450px"
-     title="RBAC登录"
+     style="height: 300px;width: 450px"
+     title="登录"
      data-options="draggable:false,closable:false">
+    <h2 style="text-align: center;color: #6a6a6a" >广西嘉进医药批发有限公司流向系统</h2>
     <form id="loginForm" method="post" action="login">
         <div style="margin: 20px 100px">
             <input required="true" style="width: 200px" class="easyui-textbox" labelWidth="50" label="帐号" type="text"

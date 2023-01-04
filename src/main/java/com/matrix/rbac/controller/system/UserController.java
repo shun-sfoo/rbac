@@ -28,7 +28,6 @@ public class UserController {
     @Autowired
     private UserDao userDao;
 
-
     @Autowired
     private RoleDao roleDao;
 
@@ -97,5 +96,25 @@ public class UserController {
             return "true";
         }
         return "false";
+    }
+
+    @GetMapping("/passwd")
+    public String password() {
+        return "/system/user/password";
+    }
+
+    @PostMapping("/passwd")
+    @ResponseBody
+    public JsonResult changePassword(@SessionAttribute(value = "user", required = false) User user, String oldPassword, String newPassword1, String newPassword2) {
+        User one = userDao.findById(user.getId()).get();
+        if (one.getPassword().equals(DigestUtils.md5Hex(oldPassword))) {
+            if (newPassword1.equals(newPassword2)) {
+                one.setPassword(DigestUtils.md5Hex(newPassword1));
+                return JsonResult.success("修改成功");
+            } else {
+                return JsonResult.error("两次密码输入不一致");
+            }
+        }
+        return JsonResult.error("愿密码错误");
     }
 }

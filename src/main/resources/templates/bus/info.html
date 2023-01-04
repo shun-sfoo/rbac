@@ -1,0 +1,32 @@
+<div class="easyui-layout" fit="true">
+    <div data-options="region:'north',border:false" style="height: 100px;padding: 10px;overflow: hidden;">
+        <form id="info_search_form" class="searcher-form">
+            <span>日期：</span>
+            <input name="startTime" class="easyui-datebox field" width="120px">
+            <span>至：</span>
+            <input name="endTime" class="easyui-datebox field" width="120px">
+            <span>收货客户：</span>
+            <input name="customer" class="easyui-textbox field" width="90px">
+            <span>商品编号：</span>
+            <input name="productCode" class="easyui-textbox field" width="120px">
+            <span>商品名称：</span>
+            <input name="productName" class="easyui-textbox field" width="120px">
+            <a class="easyui-linkbutton searcher" data-options="iconCls:'icon-search'">检索</a>
+            <a class="easyui-linkbutton reset" data-options="iconCls:'icon-clear'">重置</a>
+        </form>
+    </div>
+    <div data-options="region:'center',border:false" style="border-top: 1px solid #D3D3D3">
+        <table id="infoGrid"></table>
+    </div>
+    <div id="infoGridAction" style="display: none;" xmlns:th="http://www.thymeleaf.org">
+        <a th:if="${#lists.contains(session.keys, 'bus:info:edit')}" class="actions  edit">编辑</a>
+        <a th:if="${#lists.contains(session.keys, 'bus:info:delete')}" class="actions  delete">删除</a>
+    </div>
+    <div id="infoGridToolbar" style="display: none;" xmlns:th="http://www.thymeleaf.org">
+        <a th:if="${#lists.contains(session.keys, 'bus:info:import')}" class="easyui-linkbutton actions import"
+           iconCls="icon-add" plain="true">导入</a>
+        <a class="easyui-linkbutton actions export" iconCls="icon-print" plain="true">导出</a>
+    </div>
+    <input id="infoUpload" type="file" style="display: none;"/>
+</div>
+<script src="js/info.js"></script>

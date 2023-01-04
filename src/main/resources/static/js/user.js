@@ -1,12 +1,14 @@
 $(function () {
     let userGrid = $('#userGrid');
+    let userGridAction = $('#userGridAction');
+
     userGrid.datagrid({
         fit: true,
         border: false,
         url: '/system/user/list',
         singleSelect: true,
         pagination: true,
-        rownumbers:true,
+        rownumbers: true,
         columns: [[
             {field: 'account', title: '账户', width: 180},
             {field: 'userName', title: '姓名', width: 150},
@@ -27,21 +29,12 @@ $(function () {
             },
             {
                 field: 'operate', title: '操作', width: 100, align: 'center', formatter: function (v, row) {
-                    let buttons = [];
-                    buttons.push('<a data-id="' + row.id + '" class="actions  edit" >编辑</a>');
-                    buttons.push('<a data-id="' + row.id + '" class="actions  delete">删除</a>');
-                    return buttons.join("");
+                    return userGridAction.children("a.actions").attr('data-id', row.id).end().html();
                 }
             },
 
         ]],
-        toolbar: [{
-            text: '创建用户',
-            iconCls: 'icon-add',
-            handler: function () {
-                formDialog();
-            }
-        }],
+        toolbar: "#userGridToolbar"
     });
 
     let gridPanel = userGrid.datagrid("getPanel");
@@ -60,6 +53,8 @@ $(function () {
                 });
             }
         })
+    }).on("click", "a.create", function () {
+        formDialog();
     });
 
     /**

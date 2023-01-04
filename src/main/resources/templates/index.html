@@ -2,8 +2,8 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
-    <title>SpringBoot and easyui RBAC</title>
-    <link rel="stylesheet" href="easyui/themes/bootstrap/easyui.css">
+    <title>广西嘉进医药批发有限公司流向系统</title>
+    <link rel="stylesheet" href="easyui/themes/black/easyui.css">
     <link rel="stylesheet" href="easyui/themes/icon.css">
     <link rel="stylesheet" href="css/app.css">
     <script src="easyui/jquery.min.js"></script>
@@ -48,15 +48,51 @@
                     center.panel('refresh', node.href).panel('setTitle', node.text);
                 }
             });
+
+            $("#passwdSet").on('click', function () {
+                passwdDialog();
+            })
+
+            function passwdDialog() {
+                let dialog = $("<div/>").dialog({
+                    title: '修改密码',
+                    href: '/system/user/passwd',
+                    width: 500,
+                    height: 200,
+                    modal: true,
+                    onClose: function () {
+                        $(this).dialog("destroy");
+                    },
+                    buttons: [{
+                        text: '更新密码',
+                        handler: function () {
+                            let passwordForm = $("#passwdForm");
+                            $.post("/system/user/passwd",
+                                passwordForm.serialize()
+                            ).done(function (res) {
+                                if (res.success) {
+                                    dialog.dialog('close');
+                                    location.replace('/logout');
+                                } else {
+                                    $.messager.alert("提示", res.msg);
+                                }
+                            });
+                        }
+                    }]
+                })
+            }
+
         });
     </script>
 </head>
 <body class="easyui-layout">
 <div data-options="region:'north'" class="header">
-    <h1 class="title">Spring boot and easyui rbac2</h1>
-    <div class="info">
+    <h1 class="title">广西嘉进医药批发有限公司流向平台</h1>
+    <link rel="icon" type="image/x-icon" href="../static/img/jiajin.png">
+    <div id="userArea" class="info">
         <a th:text="${session.user.userName}">管理员</a>
         <a href="logout">注销</a>
+        <a id="passwdSet">修改密码</a>
     </div>
 </div>
 
@@ -65,10 +101,43 @@
 </div>
 
 <div data-options="region:'center'" title="控制台">
+    <div class="easyui-layout" fit="true">
+        <div data-options="region:'north',border:false" style="height: 100px;padding: 10px;overflow: hidden;">
+            <form id="info_search_form" class="searcher-form">
+                <span>日期：</span>
+                <input name="startTime" class="easyui-datebox field" width="120px">
+                <span>至：</span>
+                <input name="endTime" class="easyui-datebox field" width="120px">
+                <span>收货客户：</span>
+                <input name="customer" class="easyui-textbox field" width="90px">
+                <span>商品编号：</span>
+                <input name="productCode" class="easyui-textbox field" width="120px">
+                <span>商品名称：</span>
+                <input name="productName" class="easyui-textbox field" width="120px">
+                <a class="easyui-linkbutton searcher" data-options="iconCls:'icon-search'">检索</a>
+                <a class="easyui-linkbutton reset" data-options="iconCls:'icon-clear'">重置</a>
+            </form>
+        </div>
+        <div data-options="region:'center',border:false" style="border-top: 1px solid #D3D3D3">
+            <table id="infoGrid"></table>
+        </div>
+        <div id="infoGridAction" style="display: none;" xmlns:th="http://www.thymeleaf.org">
+            <a th:if="${#lists.contains(session.keys, 'bus:info:edit')}" class="actions  edit">编辑</a>
+            <a th:if="${#lists.contains(session.keys, 'bus:info:delete')}" class="actions  delete">删除</a>
+        </div>
+        <div id="infoGridToolbar" style="display: none;" xmlns:th="http://www.thymeleaf.org">
+            <a th:if="${#lists.contains(session.keys, 'bus:info:import')}" class="easyui-linkbutton actions import"
+               iconCls="icon-add" plain="true">导入</a>
+            <a class="easyui-linkbutton actions export" iconCls="icon-print" plain="true">导出</a>
+        </div>
+        <input id="infoUpload" type="file" style="display: none;"/>
+    </div>
+    <script src="js/info.js"></script>
+
 </div>
 
 <div data-options="region:'south'" class="footer">
-    xxxxxx
+    Copyright: 广西嘉进医药批发有限公司
 </div>
 
 </body>

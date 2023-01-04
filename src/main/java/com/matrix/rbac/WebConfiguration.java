@@ -16,6 +16,6 @@ public class WebConfiguration extends WebMvcConfigurerAdapter {
         // 拦截所有请求
         registration.addPathPatterns("/**");
         // 排除指定请求不拦截
-        registration.excludePathPatterns("/", "/login", "/error", "/easyui/**", "/css/**");
+        registration.excludePathPatterns("/", "/login", "/error", "/easyui/**", "/css/**", "/img/**");
     }
 }
