@@ -2,6 +2,9 @@ package com.matrix.rbac.controller.bus;
 
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.read.listener.PageReadListener;
+import com.alibaba.excel.write.metadata.style.WriteCellStyle;
+import com.alibaba.excel.write.metadata.style.WriteFont;
+import com.alibaba.excel.write.style.HorizontalCellStyleStrategy;
 import com.matrix.rbac.common.JsonResult;
 import com.matrix.rbac.model.dao.FileRecordDao;
 import com.matrix.rbac.model.dao.InfoDao;
@@ -144,12 +147,17 @@ public class InfoController {
             return predicates;
         };
         List<Info> list = infoDao.findAll(spec, Sort.by(Sort.Direction.DESC, "salesDate"));
+        WriteCellStyle headWriteCellStyle = new WriteCellStyle();
+        WriteFont headWriteFont = new WriteFont();
+        headWriteFont.setFontHeightInPoints((short)10);
+        headWriteCellStyle.setWriteFont(headWriteFont);
+        HorizontalCellStyleStrategy horizontalCellStyleStrategy = new HorizontalCellStyleStrategy(headWriteCellStyle, (List<WriteCellStyle>) null);
         response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         response.setCharacterEncoding("utf-8");
         // 这里URLEncoder.encode可以防止中文乱码 当然和easyexcel没有关系
         String fileName = URLEncoder.encode("测试", "UTF-8").replaceAll("\\+", "%20");
         response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx");
-        EasyExcel.write(response.getOutputStream(), Info.class).sheet("流向数据").doWrite(list);
+        EasyExcel.write(response.getOutputStream(), Info.class).registerWriteHandler(horizontalCellStyleStrategy).sheet("流向数据").doWrite(list);
     }
 
     @GetMapping("/delete")
