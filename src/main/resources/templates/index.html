@@ -2,8 +2,8 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
-    <title>广西嘉进医药批发有限公司流向系统</title>
-    <link rel="stylesheet" href="easyui/themes/black/easyui.css">
+    <title>广西正辉药业有限公司流向平台</title>
+    <link rel="stylesheet" href="easyui/themes/ui-cupertino/easyui.css">
     <link rel="stylesheet" href="easyui/themes/icon.css">
     <link rel="stylesheet" href="css/app.css">
     <script src="easyui/jquery.min.js"></script>
@@ -86,58 +86,69 @@
     </script>
 </head>
 <body class="easyui-layout">
-<div data-options="region:'north'" class="header">
-    <h1 class="title">广西嘉进医药批发有限公司流向平台</h1>
+<div data-options="region:'north',border:true" class="header">
+    <i class="fa fa-shield"></i>
+    <h1 class="title" style="color: #0c7cd5">广西正辉药业有限公司流向平台</h1>
     <link rel="icon" type="image/x-icon" href="../static/img/jiajin.png">
     <div id="userArea" class="info">
         <a th:text="${session.user.userName}">管理员</a>
-        <a href="logout">注销</a>
-        <a id="passwdSet">修改密码</a>
+        <!--<a href="logout">注销</a>
+        <a id="passwdSet">修改密码</a>-->
     </div>
 </div>
 
-<div data-options="region:'west'" title="导航" style="width: 150px">
+<div th:if="${session.user.id == 0}" data-options="region:'west',border:true" title="导航" style="width: 150px">
     <ul id="menuTree"></ul>
 </div>
 
-<div data-options="region:'center'" title="控制台">
+<div data-options="region:'center',border:true" title="工具栏">
     <div class="easyui-layout" fit="true">
-        <div data-options="region:'north',border:false" style="height: 100px;padding: 10px;overflow: hidden;">
-            <form id="info_search_form" class="searcher-form">
-                <span>日期：</span>
-                <input name="startTime" class="easyui-datebox field" width="120px">
-                <span>至：</span>
-                <input name="endTime" class="easyui-datebox field" width="120px">
-                <span>收货客户：</span>
-                <input name="customer" class="easyui-textbox field" width="90px">
-                <span>商品编号：</span>
-                <input name="productCode" class="easyui-textbox field" width="120px">
-                <span>商品名称：</span>
-                <input name="productName" class="easyui-textbox field" width="120px">
-                <a class="easyui-linkbutton searcher" data-options="iconCls:'icon-search'">检索</a>
-                <a class="easyui-linkbutton reset" data-options="iconCls:'icon-clear'">重置</a>
-            </form>
+        <div data-options="region:'north',border:false,split:true"
+             style="height: 120px;padding: 10px;overflow: hidden;">
+            <div class="easyui-layout" data-options="fit:true">
+                <div data-options="region:'west',split:true" width="70%">
+                    <form id="info_search_form" class="searcher-form">
+                        <input name="customer" class="easyui-searchbox" data-options="prompt:'往来单位'"
+                               width="120px">
+                        <input name="productName" class="easyui-searchbox" data-options="prompt:'商品名称'"
+                               width="120px">
+                        <span>从：</span>
+                        <input name="startTime" class="easyui-datebox field" width="120px">
+                        <span>到：</span>
+                        <input name="endTime" class="easyui-datebox field" width="120px">
+                        <a class="easyui-linkbutton searcher"
+                           data-options="iconCls:'icon-search'">检索</a>
+                        <a class="easyui-linkbutton reset" data-options="iconCls:'icon-clear'">重置</a>
+                    </form>
+                </div>
+                <div id="operatePanel" data-options="region:'center',split:true">
+                    <a th:if="${#lists.contains(session.keys, 'bus:info:import')}"
+                       class="easyui-linkbutton import" iconCls="icon-print">导入</a>
+                    <a class="easyui-linkbutton export" iconCls="icon-save">导出</a>
+                    <a class="easyui-linkbutton" iconCls="icon-man" href="logout">注销</a>
+                    <a class="easyui-linkbutton" iconCls="icon-edit" id="passwdSet">修改密码</a>
+                </div>
+            </div>
         </div>
-        <div data-options="region:'center',border:false" style="border-top: 1px solid #D3D3D3">
+        <div data-options="region:'center',border:false" style="border-top: 1px solid #D3D3D3" title="流向数据">
             <table id="infoGrid"></table>
         </div>
-        <div id="infoGridAction" style="display: none;" xmlns:th="http://www.thymeleaf.org">
+        <div id="infoGridAction" style="display: none;">
             <a th:if="${#lists.contains(session.keys, 'bus:info:edit')}" class="actions  edit">编辑</a>
             <a th:if="${#lists.contains(session.keys, 'bus:info:delete')}" class="actions  delete">删除</a>
         </div>
-        <div id="infoGridToolbar" style="display: none;" xmlns:th="http://www.thymeleaf.org">
-            <a th:if="${#lists.contains(session.keys, 'bus:info:import')}" class="easyui-linkbutton actions import"
-               iconCls="icon-add" plain="true">导入</a>
-            <a class="easyui-linkbutton actions export" iconCls="icon-print" plain="true">导出</a>
-        </div>
+        <!--<div id="infoGridToolbar" style="display: none;" xmlns:th="http://www.thymeleaf.org">
+            <a th:if="${#lists.contains(session.keys, 'bus:info:import')}"
+               class="fa-solid fa-file-import actions import">导入</a>
+            <a class="fa-solid fa-file-export actions export">导出</a>
+        </div>-->
         <input id="infoUpload" type="file" style="display: none;"/>
     </div>
     <script src="js/info.js"></script>
-
 </div>
 
-<div data-options="region:'south'" class="footer">
-    Copyright: 广西嘉进医药批发有限公司
+<div data-options="region:'south'" class="footer" style="text-align: right">
+    Copyright: 广西正辉药业有限公司
 </div>
 
 </body>

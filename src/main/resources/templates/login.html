@@ -1,14 +1,9 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8"/>
-    <title>广西嘉进医药批发有限公司流向系统</title>
-    <link rel="stylesheet" href="easyui/themes/metro/easyui.css">
-    <link rel="stylesheet" href="easyui/themes/icon.css">
-    <link rel="stylesheet" href="css/app.css">
-    <script src="easyui/jquery.min.js"></script>
-    <script src="easyui/jquery.easyui.min.js"></script>
-    <script src="easyui/locale/easyui-lang-zh_CN.js"></script>
+    <meta charset="UTF-8">
+    <title>广西正辉药业有限公司流向系统</title>
+    <link rel="stylesheet" href="/css/login.css">
     <script>
         $(function () {
             $("#loginBtn").on('click', function () {
@@ -20,30 +15,21 @@
         });
     </script>
 </head>
-<body style="background-image: url('/img/bg.jpg')">
-<div class="easyui-dialog"
-     style="height: 300px;width: 450px"
-     title="登录"
-     data-options="draggable:false,closable:false">
-    <h2 style="text-align: center;color: #6a6a6a" >广西嘉进医药批发有限公司流向系统</h2>
-    <form id="loginForm" method="post" action="login">
-        <div style="margin: 20px 100px">
-            <input required="true" style="width: 200px" class="easyui-textbox" labelWidth="50" label="帐号" type="text"
-                   name="account">
+<body>
+<div class="logo_box">
+    <h1>广西正辉药业有限公司</h1>
+    <form id="loginForm" action="login" method="post" autocomplete="off">
+        <div class="input_outer">
+            <input required="required" name="account" class="text" placeholder="输入账号" type="text">
         </div>
-        <div style="margin: 20px 100px">
-            <input required="true" style="width: 200px" class="easyui-passwordbox" labelWidth="50" label="密码"
-                   type="password"
-                   name="password">
+        <div class="input_outer">
+            <input required="required" placeholder="请输入密码" name="password" class="text" type="password">
         </div>
-        <div style="text-align: center">
-            <button id="loginBtn" iconCls="icon-ok" class="easyui-linkbutton">登录</button>
+        <div class="mb2">
+            <button id="loginBtn" class="act-but submit" style="color: #FFFFFF">登录</button>
         </div>
-
         <div style="text-align: center;padding: 5px;color: red" th:if="${error != null}" th:text="${error}"></div>
     </form>
-
 </div>
-
 </body>
 </html>

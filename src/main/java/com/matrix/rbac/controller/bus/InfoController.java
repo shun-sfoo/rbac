@@ -4,8 +4,10 @@ import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.read.listener.PageReadListener;
 import com.matrix.rbac.common.JsonResult;
 import com.matrix.rbac.model.dao.FileRecordDao;
+import com.matrix.rbac.model.dao.FlowDao;
 import com.matrix.rbac.model.dao.InfoDao;
 import com.matrix.rbac.model.entity.FileRecord;
+import com.matrix.rbac.model.entity.Flow;
 import com.matrix.rbac.model.entity.Info;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,9 +33,8 @@ import java.util.*;
 @Slf4j
 @Transactional(readOnly = true)
 public class InfoController {
-
     @Autowired
-    private InfoDao infoDao;
+    private FlowDao infoDao;
 
     @Autowired
     private FileRecordDao fileRecordDao;
@@ -51,24 +52,20 @@ public class InfoController {
     @PostMapping("/update")
     @ResponseBody
     @Transactional
-    public JsonResult save(Info info) {
+    public JsonResult save(Flow info) {
         infoDao.save(info);
         return JsonResult.success();
     }
 
     @RequestMapping("/list")
     @ResponseBody
-    public Map<String, Object> list(@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "20") int rows, Info info, String startTime, String endTime) {
+    public Map<String, Object> list(@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "20") int rows, Flow info, String startTime, String endTime) {
 //        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         PageRequest pr = PageRequest.of(page - 1, rows, Sort.Direction.DESC, "salesDate");
-        Specification<Info> spec = (root, query, cb) -> {
+        Specification<Flow> spec = (root, query, cb) -> {
             Predicate predicates = cb.conjunction();
             if (StringUtils.hasText(info.getCustomer())) {
                 predicates.getExpressions().add(cb.like(root.get("customer"), "%" + info.getCustomer() + "%"));
-            }
-
-            if (StringUtils.hasText(info.getProductCode())) {
-                predicates.getExpressions().add(cb.like(root.get("productCode"), "%" + info.getProductCode() + "%"));
             }
 
             if (StringUtils.hasText(info.getProductName())) {
@@ -79,13 +76,14 @@ public class InfoController {
                 predicates.getExpressions().add(cb.greaterThanOrEqualTo(root.get("salesDate").as(String.class), startTime));
             }
 
-            if (StringUtils.hasText(startTime)) {
-                predicates.getExpressions().add(cb.lessThanOrEqualTo(root.get("salesDate").as(String.class), endTime));
+            if (StringUtils.hasText(endTime)) {
+                String tmp = endTime + " 23:59:59";
+                predicates.getExpressions().add(cb.lessThanOrEqualTo(root.get("salesDate").as(String.class), tmp));
             }
 
             return predicates;
         };
-        Page<Info> pageData = infoDao.findAll(spec, pr);
+        Page<Flow> pageData = infoDao.findAll(spec, pr);
         Map<String, Object> data = new HashMap<>();
         data.put("total", pageData.getTotalElements());
         data.put("rows", pageData.getContent());
@@ -102,7 +100,7 @@ public class InfoController {
             if (fr != null) {
                 return JsonResult.error("已上传过相同名称的文件");
             }
-            EasyExcel.read(multipartFile.getInputStream(), Info.class, new PageReadListener<Info>(dataList -> {
+            EasyExcel.read(multipartFile.getInputStream(), Flow.class, new PageReadListener<Flow>(dataList -> {
                 infoDao.saveAll(dataList);
             })).sheet().doRead();
             FileRecord record = new FileRecord();
@@ -110,21 +108,18 @@ public class InfoController {
             fileRecordDao.save(record);
             return JsonResult.success("上传成功!");
         } catch (Exception e) {
+            log.error(e.getCause().getMessage());
             return JsonResult.error("上传异常");
         }
     }
 
 
     @GetMapping("/export")
-    public void export(HttpServletResponse response, Info info, String startTime, String endTime) throws IOException {
-        Specification<Info> spec = (root, query, cb) -> {
+    public void export(HttpServletResponse response, Flow info, String startTime, String endTime) throws IOException {
+        Specification<Flow> spec = (root, query, cb) -> {
             Predicate predicates = cb.conjunction();
             if (StringUtils.hasText(info.getCustomer())) {
                 predicates.getExpressions().add(cb.like(root.get("customer"), "%" + info.getCustomer() + "%"));
-            }
-
-            if (StringUtils.hasText(info.getProductCode())) {
-                predicates.getExpressions().add(cb.like(root.get("productCode"), "%" + info.getProductCode() + "%"));
             }
 
             if (StringUtils.hasText(info.getProductName())) {
@@ -135,18 +130,30 @@ public class InfoController {
                 predicates.getExpressions().add(cb.greaterThanOrEqualTo(root.get("salesDate").as(String.class), startTime));
             }
 
-            if (StringUtils.hasText(startTime)) {
-                predicates.getExpressions().add(cb.lessThanOrEqualTo(root.get("salesDate").as(String.class), endTime));
+            if (StringUtils.hasText(endTime)) {
+                String tmp = endTime + " 23:59:59";
+                predicates.getExpressions().add(cb.lessThanOrEqualTo(root.get("salesDate").as(String.class), tmp));
             }
 
             return predicates;
         };
-        List<Info> list = infoDao.findAll(spec, Sort.by(Sort.Direction.DESC, "salesDate"));
+        List<Flow> list = infoDao.findAll(spec, Sort.by(Sort.Direction.DESC, "salesDate"));
         response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         response.setCharacterEncoding("utf-8");
         // 这里URLEncoder.encode可以防止中文乱码 当然和easyexcel没有关系
         String fileName = URLEncoder.encode("测试", "UTF-8").replaceAll("\\+", "%20");
         response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx");
-        EasyExcel.write(response.getOutputStream(), Info.class).sheet("流向数据").doWrite(list);
+        EasyExcel.write(response.getOutputStream(), Flow.class).sheet("流向数据").doWrite(list);
+    }
+
+    @GetMapping("/delete")
+    @ResponseBody
+    @Transactional
+    public JsonResult delete(Long id) {
+        if (infoDao.findById(id).isPresent()) {
+            infoDao.deleteById(id);
+            return JsonResult.success();
+        }
+        return JsonResult.error("数据不存在!");
     }
 }

@@ -14,18 +14,18 @@ $(function () {
         pageSize: 20,
         columns: [[
             {field: 'salesDate', title: '日期', width: 90},
-            {field: 'customer', title: '收货客户', width: 250},
-            {field: 'operator', title: '开单员', width: 80},
-            {field: 'productCode', title: '商品编号', width: 80},
+            {field: 'customer', title: '往来单位名称', width: 250},
             {field: 'productName', title: '商品名称', width: 150},
             {field: 'specification', title: '商品规格', width: 100},
-            {field: 'productLocation', title: '商品产地', width: 300},
-            {field: 'productUnit', title: '单位', width: 50},
-            {field: 'provider', title: '供应商名称', width: 180},
+            {field: 'productUnit', title: '包装单位', width: 80},
+            {field: 'provider', title: '生产厂家', width: 180},
+            {field: 'num', title: '数量', width: 50},
+            {field: 'price', title: '含税价', width: 80},
             {field: 'batchNo', title: '批号', width: 80},
             {field: 'availableDate', title: '有效期至', width: 80},
-            {field: 'num', title: '数量', width: 50},
-            {field: 'price', title: '核算成本价', width: 80},
+            {field: 'productDate', title: '生产日期', width: 80},
+            {field: 'operator', title: '开单员', width: 80},
+            {field: 'authName', title: '权限名称', width: 80},
             {
                 field: 'operate', title: '操作', width: 100, align: 'center', formatter: function (v, row) {
                     return infoGridAction.children("a.actions").attr('data-id', row.id).end().html();
@@ -33,10 +33,11 @@ $(function () {
             },
 
         ]],
-        toolbar: "#infoGridToolbar"
+        // toolbar: "#infoGridToolbar"
     });
 
     let gridPanel = infoGrid.datagrid("getPanel");
+    let operatePanel = $("#operatePanel");
 
     // 给操作按钮绑定事件
     gridPanel.on("click", "a.edit", function () {
@@ -52,7 +53,9 @@ $(function () {
                 });
             }
         })
-    }).on("click", "a.import", function () {
+    });
+
+    operatePanel.on("click", "a.import", function () {
         $("#infoUpload").click();
     }).on("click", "a.export", function () {
         let xhr = new XMLHttpRequest();

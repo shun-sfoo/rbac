@@ -6,20 +6,11 @@
     <div class="form-line">
         <label for="salesDate">日期</label>
         <input id="salesDate" name="salesDate" class="easyui-datebox"
-               th:value="${info?.salesDate}"
-        >
+               th:value="${info?.salesDate}">
     </div>
     <div class="form-line">
-        <label for="customer">收货客户</label>
+        <label for="customer">往来单位名称</label>
         <input id="customer" name="customer" type="text" class="easyui-textbox" th:value="${info?.customer}">
-    </div>
-    <div class="form-line">
-        <label for="operator">开单员</label>
-        <input id="operator" name="operator" type="text" class="easyui-textbox" th:value="${info?.operator}">
-    </div>
-    <div class="form-line">
-        <label for="productCode">商品编号</label>
-        <input id="productCode" name="productCode" type="text" class="easyui-textbox" th:value="${info?.productCode}">
     </div>
     <div class="form-line">
         <label for="productName">商品名称</label>
@@ -31,17 +22,20 @@
                th:value="${info?.specification}">
     </div>
     <div class="form-line">
-        <label for="productLocation">商品产地</label>
-        <input id="productLocation" name="productLocation" type="text" class="easyui-textbox"
-               th:value="${info?.productLocation}">
-    </div>
-    <div class="form-line">
-        <label for="productUnit">单位</label>
+        <label for="productUnit">包装单位</label>
         <input id="productUnit" name="productUnit" type="text" class="easyui-textbox" th:value="${info?.productUnit}">
     </div>
     <div class="form-line">
-        <label for="provider">供应商名称</label>
+        <label for="provider">生产厂家</label>
         <input id="provider" name="provider" type="text" class="easyui-textbox" th:value="${info?.provider}">
+    </div>
+    <div class="form-line">
+        <label for="num">数量</label>
+        <input id="num" name="num" type="text" class="easyui-textbox" th:value="${info?.num}">
+    </div>
+    <div class="form-line">
+        <label for="price">含税价</label>
+        <input id="price" name="price" type="text" class="easyui-textbox" th:value="${info?.price}">
     </div>
     <div class="form-line">
         <label for="batchNo">批号</label>
@@ -50,18 +44,21 @@
     <div class="form-line">
         <label for="availableDate">有效期至</label>
         <input id="availableDate" name="availableDate" class="easyui-datebox"
-               th:value="${info?.availableDate}"
-        >
+               th:value="${info?.availableDate}">
     </div>
     <div class="form-line">
-        <label for="num">数量</label>
-        <input id="num" name="num" type="text" class="easyui-textbox" th:value="${info?.num}">
+        <label for="productDate">生产日期</label>
+        <input id="productDate" name="productDate" class="easyui-datebox"
+               th:value="${info?.productDate}">
     </div>
     <div class="form-line">
-        <label for="price">核算成本价</label>
-        <input id="price" name="price" type="text" class="easyui-textbox" th:value="${info?.price}">
+        <label for="operator">开单员</label>
+        <input id="operator" name="operator" type="text" class="easyui-textbox" th:value="${info?.operator}">
     </div>
-
+    <div class="form-line">
+        <label for="authName">权限名称</label>
+        <input id="authName" name="authName" type="text" class="easyui-textbox" th:value="${info?.authName}">
+    </div>
 </form>
 </body>
 </html>
