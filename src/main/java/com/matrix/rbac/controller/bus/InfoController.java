@@ -79,8 +79,9 @@ public class InfoController {
                 predicates.getExpressions().add(cb.greaterThanOrEqualTo(root.get("salesDate").as(String.class), startTime));
             }
 
-            if (StringUtils.hasText(startTime)) {
-                predicates.getExpressions().add(cb.lessThanOrEqualTo(root.get("salesDate").as(String.class), endTime));
+            if (StringUtils.hasText(endTime)) {
+                String tmp = endTime + " 23:59:59";
+                predicates.getExpressions().add(cb.lessThanOrEqualTo(root.get("salesDate").as(String.class), tmp));
             }
 
             return predicates;
@@ -135,8 +136,9 @@ public class InfoController {
                 predicates.getExpressions().add(cb.greaterThanOrEqualTo(root.get("salesDate").as(String.class), startTime));
             }
 
-            if (StringUtils.hasText(startTime)) {
-                predicates.getExpressions().add(cb.lessThanOrEqualTo(root.get("salesDate").as(String.class), endTime));
+            if (StringUtils.hasText(endTime)) {
+                String tmp = endTime + " 23:59:59";
+                predicates.getExpressions().add(cb.lessThanOrEqualTo(root.get("salesDate").as(String.class), tmp));
             }
 
             return predicates;
@@ -148,5 +150,16 @@ public class InfoController {
         String fileName = URLEncoder.encode("测试", "UTF-8").replaceAll("\\+", "%20");
         response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx");
         EasyExcel.write(response.getOutputStream(), Info.class).sheet("流向数据").doWrite(list);
+    }
+
+    @GetMapping("/delete")
+    @ResponseBody
+    @Transactional
+    public JsonResult delete(Long id) {
+        if (infoDao.findById(id).isPresent()) {
+            infoDao.deleteById(id);
+            return JsonResult.success();
+        }
+        return JsonResult.error("数据不存在!");
     }
 }
