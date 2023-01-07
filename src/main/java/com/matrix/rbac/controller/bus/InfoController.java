@@ -170,4 +170,12 @@ public class InfoController {
         }
         return JsonResult.error("数据不存在!");
     }
+
+    @PostMapping("/multiple")
+    @ResponseBody
+    @Transactional
+    public JsonResult multiple(Long[] id) {
+        infoDao.deleteAllById(Arrays.asList(id));
+        return JsonResult.success("删除成功");
+    }
 }

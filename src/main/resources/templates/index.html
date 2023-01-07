@@ -129,6 +129,8 @@
             <a th:if="${#lists.contains(session.keys, 'bus:info:import')}" class="easyui-linkbutton actions import"
                iconCls="icon-add" plain="true">导入</a>
             <a class="easyui-linkbutton actions export" iconCls="icon-print" plain="true">导出</a>
+            <a th:if="${#lists.contains(session.keys, 'bus:info:import')}" class="easyui-linkbutton actions multiple"
+               iconCls="icon-no" plain="true">选择删除</a>
         </div>
         <input id="infoUpload" type="file" style="display: none;"/>
     </div>

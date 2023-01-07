@@ -8,11 +8,12 @@ $(function () {
         border: false,
         emptyMsg: "无数据",
         url: '/bus/info/list',
-        singleSelect: true,
         pagination: true,
         rownumbers: true,
         pageSize: 20,
+        multiple: true,
         columns: [[
+            {field: "ck", checkbox: true},
             {field: 'salesDate', title: '日期', width: 90},
             {field: 'customer', title: '收货客户', width: 250},
             {field: 'operator', title: '开单员', width: 80},
@@ -52,6 +53,24 @@ $(function () {
                 });
             }
         })
+    }).on("click", "a.multiple", function () {
+        let checkedRows = infoGrid.datagrid('getChecked');
+        if (checkedRows.length === 0) {
+            $.messager.alert("系统提示", '至少选择一行');
+        } else {
+            let rowIds = [];
+            $.each(checkedRows, function () {
+                rowIds.push(this.id);
+            })
+            let params = "id=" + rowIds.join("&id=");
+            $.messager.confirm("提示", "是否删除" + rowIds.length + "条记录", function (r) {
+                if (r) {
+                    $.post("/bus/info/multiple", params, function (resp) {
+                        infoGrid.datagrid("reload");
+                    })
+                }
+            })
+        }
     }).on("click", "a.import", function () {
         $("#infoUpload").click();
     }).on("click", "a.export", function () {
