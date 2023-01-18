@@ -125,6 +125,8 @@
                     <a th:if="${#lists.contains(session.keys, 'bus:info:import')}"
                        class="easyui-linkbutton import" iconCls="icon-print">导入</a>
                     <a class="easyui-linkbutton export" iconCls="icon-save">导出</a>
+                    <a th:if="${#lists.contains(session.keys, 'bus:info:delete')}"
+                       class="easyui-linkbutton multiple" iconCls="icon-cancel">删除选定</a>
                     <a class="easyui-linkbutton" iconCls="icon-man" href="logout">注销</a>
                     <a class="easyui-linkbutton" iconCls="icon-edit" id="passwdSet">修改密码</a>
                 </div>

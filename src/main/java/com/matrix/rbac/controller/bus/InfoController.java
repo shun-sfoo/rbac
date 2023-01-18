@@ -144,7 +144,7 @@ public class InfoController {
         List<Flow> list = infoDao.findAll(spec, Sort.by(Sort.Direction.DESC, "salesDate"));
         WriteCellStyle headWriteCellStyle = new WriteCellStyle();
         WriteFont headWriteFont = new WriteFont();
-        headWriteFont.setFontHeightInPoints((short)10);
+        headWriteFont.setFontHeightInPoints((short) 10);
         headWriteCellStyle.setWriteFont(headWriteFont);
         HorizontalCellStyleStrategy horizontalCellStyleStrategy = new HorizontalCellStyleStrategy(headWriteCellStyle, (List<WriteCellStyle>) null);
         response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
@@ -164,5 +164,13 @@ public class InfoController {
             return JsonResult.success();
         }
         return JsonResult.error("数据不存在!");
+    }
+
+    @PostMapping("/multiple")
+    @ResponseBody
+    @Transactional
+    public JsonResult multiple(Long[] id) {
+        infoDao.deleteAllById(Arrays.asList(id));
+        return JsonResult.success("删除成功");
     }
 }
