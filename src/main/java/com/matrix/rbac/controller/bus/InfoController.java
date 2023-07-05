@@ -8,12 +8,10 @@ import com.alibaba.excel.write.style.HorizontalCellStyleStrategy;
 import com.matrix.rbac.common.JsonResult;
 import com.matrix.rbac.model.dao.FileRecordDao;
 import com.matrix.rbac.model.dao.FlowDao;
-import com.matrix.rbac.model.dao.InfoDao;
 import com.matrix.rbac.model.entity.FileRecord;
 import com.matrix.rbac.model.entity.Flow;
-import com.matrix.rbac.model.entity.Info;
+import com.matrix.rbac.model.entity.User;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.poi.ss.usermodel.IndexedColors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -56,15 +54,17 @@ public class InfoController {
     @PostMapping("/update")
     @ResponseBody
     @Transactional
-    public JsonResult save(Flow info) {
+    public JsonResult save(@SessionAttribute(value = "user", required = false) User user, Flow info) {
+        info.setUploader(user.getTel());
         infoDao.save(info);
         return JsonResult.success();
     }
 
     @RequestMapping("/list")
     @ResponseBody
-    public Map<String, Object> list(@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "20") int rows, Flow info, String startTime, String endTime) {
+    public Map<String, Object> list(@SessionAttribute(value = "user", required = false) User user, @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "20") int rows, Flow info, String startTime, String endTime) {
 //        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String tel = user.getTel();
         PageRequest pr = PageRequest.of(page - 1, rows, Sort.Direction.DESC, "salesDate");
         Specification<Flow> spec = (root, query, cb) -> {
             Predicate predicates = cb.conjunction();
@@ -85,6 +85,8 @@ public class InfoController {
                 predicates.getExpressions().add(cb.lessThanOrEqualTo(root.get("salesDate").as(String.class), tmp));
             }
 
+            predicates.getExpressions().add(cb.equal(root.get("uploader"), tel));
+
             return predicates;
         };
         Page<Flow> pageData = infoDao.findAll(spec, pr);
@@ -97,18 +99,23 @@ public class InfoController {
     @PostMapping(value = "/upload")
     @ResponseBody
     @Transactional
-    public JsonResult upload(@RequestParam("file") MultipartFile multipartFile) {
+    public JsonResult upload(@SessionAttribute(value = "user", required = false) User user, @RequestParam("file") MultipartFile multipartFile) {
         try {
+            String tel = user.getTel();
             String name = multipartFile.getOriginalFilename();
-            FileRecord fr = fileRecordDao.findByFileName(name);
+            FileRecord fr = fileRecordDao.findByFileNameAndUploader(name, tel);
             if (fr != null) {
                 return JsonResult.error("已上传过相同名称的文件");
             }
             EasyExcel.read(multipartFile.getInputStream(), Flow.class, new PageReadListener<Flow>(dataList -> {
+                dataList.stream().forEach((record) -> {
+                    record.setUploader(tel);
+                });
                 infoDao.saveAll(dataList);
             })).sheet().doRead();
             FileRecord record = new FileRecord();
             record.setFileName(name);
+            record.setUploader(tel);
             fileRecordDao.save(record);
             return JsonResult.success("上传成功!");
         } catch (Exception e) {
@@ -119,7 +126,8 @@ public class InfoController {
 
 
     @GetMapping("/export")
-    public void export(HttpServletResponse response, Flow info, String startTime, String endTime) throws IOException {
+    public void export(@SessionAttribute(value = "user", required = false) User user,  HttpServletResponse response, Flow info, String startTime, String endTime) throws IOException {
+        String tel = user.getTel();
         Specification<Flow> spec = (root, query, cb) -> {
             Predicate predicates = cb.conjunction();
             if (StringUtils.hasText(info.getCustomer())) {
@@ -138,6 +146,8 @@ public class InfoController {
                 String tmp = endTime + " 23:59:59";
                 predicates.getExpressions().add(cb.lessThanOrEqualTo(root.get("salesDate").as(String.class), tmp));
             }
+
+            predicates.getExpressions().add(cb.equal(root.get("uploader"), tel));
 
             return predicates;
         };

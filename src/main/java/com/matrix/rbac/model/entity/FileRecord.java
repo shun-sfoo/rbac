@@ -14,4 +14,5 @@ public class FileRecord {
 
     private String fileName;
 
+    private String uploader;
 }

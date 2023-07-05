@@ -6,4 +6,5 @@ import org.springframework.data.repository.CrudRepository;
 public interface FileRecordDao extends CrudRepository<FileRecord, Long> {
 
     FileRecord findByFileName(String fileName);
+    FileRecord findByFileNameAndUploader(String fileName, String uploader);
 }

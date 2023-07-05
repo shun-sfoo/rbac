@@ -52,6 +52,7 @@ public class Flow {
     @ExcelProperty(value = "批号")
     private String batchNo;
 
+    private String uploader;
 
     @com.alibaba.excel.annotation.format.DateTimeFormat("yyyy-MM")
     @DateTimeFormat(pattern = "yyyy-MM")
