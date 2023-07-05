@@ -114,6 +114,7 @@ public class InfoController {
             fileRecordDao.save(record);
             return JsonResult.success("上传成功!");
         } catch (Exception e) {
+            log.error(e.getMessage(),e);
             return JsonResult.error("上传异常");
         }
     }
